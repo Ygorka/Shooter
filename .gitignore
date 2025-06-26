@@ -1,14 +1,21 @@
-Binaries
-DerivedDataCache
-Intermediate
-Saved
-.vscode
-.vs
-*.VC.db
-*.opensdf
-*.opendb
-*.sdf
+# Binaries
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
 *.sln
 *.suo
-*.xcodeproj
-*.xcworkspace
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+
+# Builds
+Build/
+
+# Visual Studio
+.vs/
+
+# Plugin binaries
+Plugins/*/Binaries/
+Plugins/*/Intermediate/
