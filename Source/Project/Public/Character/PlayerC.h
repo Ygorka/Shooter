@@ -58,4 +58,16 @@ private:
 	void StopRun(const FInputActionValue& InputValue);
 
 	bool bIsRunning;
+
+	void SpawnWeapon();
+
+	UPROPERTY(EditDefaultsOnly, Category="Weapon")
+	TSubclassOf<AActor> Weapon;
+
+	AActor* CurrentWeapon;
+
+	UPROPERTY(EditDefaultsOnly, Category="Weapon")
+	FName SocketWeaponName = "WeaponSocket";
+
+
 };

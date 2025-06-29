@@ -39,6 +39,9 @@ void APlayerC::BeginPlay()
 			Subsystem->AddMappingContext(InputMapping, 0);
 		}
 	}
+
+	SpawnWeapon();
+
 }
 
 void APlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -94,6 +97,17 @@ void APlayerC::StopRun(const FInputActionValue& InputValue)
 {
 	bIsRunning = false;
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
+void APlayerC::SpawnWeapon()
+{
+	if (!GetWorld()) return;
+	if (!Weapon) return;
+
+	FTransform SocketTransform = GetMesh()->GetSocketTransform(SocketWeaponName);
+
+	CurrentWeapon = GetWorld()->SpawnActor<AActor>(Weapon, SocketTransform);
+	CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, SocketWeaponName);
 }
 
 
