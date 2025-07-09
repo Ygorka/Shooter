@@ -23,7 +23,9 @@ public class Project : ModuleRules
 			"Project/Public/Character",
 			"Project/Public/GameModes",
 			"Project/Public/Animations",
-            "Project/Public/Weapon"
+            "Project/Public/Weapon",
+			"Project/Public/Widgets"
+
         });
 
 		// Uncomment if you are using Slate UI

@@ -6,6 +6,8 @@
 #include "Animation/AnimInstance.h"
 #include "AnimInstancePlayerC.generated.h"
 
+class APlayerC;
+
 UCLASS()
 class PROJECT_API UAnimInstancePlayerC : public UAnimInstance
 {
@@ -15,10 +17,14 @@ public:
 
 	virtual void NativeUpdateAnimation(float DeltaTime) override;
 
+
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Animation", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<APawn> Character;
+	UPROPERTY(EditDefaultsOnly)
+	APlayerC* Character;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float Speed;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bIsAiming;
 };

@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Widgets/MainHUD.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 APlayerC::APlayerC()
@@ -32,7 +33,8 @@ void APlayerC::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller)) 
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	if (PlayerController) 
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer())) 
 		{
@@ -51,10 +53,16 @@ void APlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerC::Move);
+
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerC::Look);
+
 		Input->BindAction(RunAction, ETriggerEvent::Triggered, this, &APlayerC::Run);
 		Input->BindAction(RunAction, ETriggerEvent::Completed, this, &APlayerC::StopRun);
 		Input->BindAction(RunAction, ETriggerEvent::Canceled, this, &APlayerC::StopRun);
+
+		Input->BindAction(AimAction, ETriggerEvent::Started, this, &APlayerC::StartAiming);
+		Input->BindAction(AimAction, ETriggerEvent::Completed, this, &APlayerC::StopAiming);
+		Input->BindAction(AimAction, ETriggerEvent::Canceled, this, &APlayerC::StopAiming);
 	}
 }
 
@@ -108,6 +116,26 @@ void APlayerC::SpawnWeapon()
 
 	CurrentWeapon = GetWorld()->SpawnActor<AActor>(Weapon, SocketTransform);
 	CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, SocketWeaponName);
+}
+bool APlayerC::GetAiming()
+{
+	return bIsAiming;
+}
+
+void APlayerC::StartAiming(const FInputActionValue& InputValue)
+{
+	if (bIsAiming) return;
+	bIsAiming = true;
+	OnAiming.Broadcast(bIsAiming);
+	bUseControllerRotationYaw =  true;
+}
+
+void APlayerC::StopAiming(const FInputActionValue& InputValue)
+{
+	if (!bIsAiming) return;
+	bIsAiming = false;
+	OnAiming.Broadcast(bIsAiming);
+	bUseControllerRotationYaw = false;
 }
 
 

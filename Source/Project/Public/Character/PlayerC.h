@@ -7,6 +7,8 @@
 #include "InputActionValue.h"
 #include "PlayerC.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAimingSignature, bool, NewIsAiming);
+
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -19,6 +21,11 @@ class PROJECT_API APlayerC : public ACharacter
 
 public:
 	APlayerC();
+
+	bool GetAiming();
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAimingSignature OnAiming;
 
 protected:
 	virtual void BeginPlay() override;
@@ -43,6 +50,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="EnhancedInput")
 	UInputAction* RunAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
+	UInputAction* AimAction;
+
+
 private:
 
 	UPROPERTY(EditDEfaultsOnly, Category = "Speed")
@@ -57,13 +68,19 @@ private:
 	void Run(const FInputActionValue& InputValue);
 	void StopRun(const FInputActionValue& InputValue);
 
+	void StartAiming(const FInputActionValue& InputValue);
+	void StopAiming(const FInputActionValue& InputValue);
+
 	bool bIsRunning;
+
+	bool bIsAiming;
 
 	void SpawnWeapon();
 
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")
 	TSubclassOf<AActor> Weapon;
 
+	UPROPERTY()
 	AActor* CurrentWeapon;
 
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")
