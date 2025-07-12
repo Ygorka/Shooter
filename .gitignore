@@ -19,3 +19,6 @@ Build/
 # Plugin binaries
 Plugins/*/Binaries/
 Plugins/*/Intermediate/
+
+*upgrade*.html
+*migration*.log

@@ -17,4 +17,14 @@ void UAnimInstancePlayerC::NativeUpdateAnimation(float DeltaTime) {
 	if (!IsValid(Character)) return;
 	Speed = TryGetPawnOwner()->GetVelocity().Size2D();
 	bIsAiming = Character->GetAiming();
+	
+	if (bIsAiming)
+	{
+	FRotator DeltaRotation = (Character->GetBaseAimRotation() - Character->GetActorRotation()).GetNormalized();
+	AimOffset = FMath::Clamp(DeltaRotation.Pitch * -1.0f, MinPichRotation, MaxPichRotation);
+	}
+	else
+	{
+		AimOffset = 0.0f;
+	}
 }
