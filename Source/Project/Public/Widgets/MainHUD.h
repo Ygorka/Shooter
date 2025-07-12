@@ -7,6 +7,7 @@
 #include "MainHUD.generated.h"
 
 class UMainWidget;
+class UCrosshairWidget;
 
 UCLASS()
 class PROJECT_API AMainHUD : public AHUD
@@ -16,9 +17,16 @@ class PROJECT_API AMainHUD : public AHUD
 public:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UCrosshairWidget* CrosshairWidget;
+
+private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UMainWidget> MainWidgetClass;
 
 	UPROPERTY()
 	UMainWidget* MainWidget;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UCrosshairWidget> CrosshairWidgetClass;
 };

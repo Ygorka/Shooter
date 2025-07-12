@@ -28,33 +28,32 @@ public:
 	FOnAimingSignature OnAiming;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	USpringArmComponent* SpringArm;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UCameraComponent* CameraComponent;
+
 	virtual void BeginPlay() override;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditDefaultsOnly)
-	USpringArmComponent* SpringArm;
+private:
 
-	UPROPERTY(EditDefaultsOnly)
-	UCameraComponent* CameraComponent;
-
-	UPROPERTY(EditDefaultsOnly, Category="EnhancedInput")
+	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
 	UInputMappingContext* InputMapping;
 
-	UPROPERTY(EditDefaultsOnly, Category="EnhancedInput")
+	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
 	UInputAction* MoveAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
 	UInputAction* LookAction;
 
-	UPROPERTY(EditDefaultsOnly, Category="EnhancedInput")
+	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
 	UInputAction* RunAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
 	UInputAction* AimAction;
-
-
-private:
 
 	UPROPERTY(EditDEfaultsOnly, Category = "Speed")
 	float RunSpeed;
@@ -85,6 +84,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")
 	FName SocketWeaponName = "WeaponSocket";
-
-
 };

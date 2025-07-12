@@ -4,6 +4,8 @@
 #include "Widgets/CrosshairWidget.h"
 #include "Components/Image.h"
 #include "Character/PlayerC.h"
+#include "Animation/UMGSequencePlayer.h"
+#include "Animation/WidgetAnimation.h"
 
 void UCrosshairWidget::NativeConstruct()
 {
@@ -16,7 +18,6 @@ void UCrosshairWidget::NativeConstruct()
 			Character->OnAiming.AddDynamic(this, &ThisClass::OnAimmingEvent);
 		}
 	}
-	
 }
 
 void UCrosshairWidget::NativeDestruct()
@@ -34,9 +35,13 @@ void UCrosshairWidget::OnAimmingEvent(bool NewIsAiming)
 	if (NewIsAiming)
 	{
 		CrosshairImg->SetVisibility(ESlateVisibility::Visible);
+		PlayAnimation(ZoomCrosshair, 0.0f, 1, EUMGSequencePlayMode::Forward, 1.0f, false);
 	}
 	else
 	{
 		CrosshairImg->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
+
+
+

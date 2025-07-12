@@ -3,6 +3,7 @@
 
 #include "Widgets/MainHUD.h"
 #include "Widgets/MainWidget.h"
+#include "Widgets/CrosshairWidget.h"
 
 void AMainHUD::BeginPlay()
 {
@@ -16,4 +17,14 @@ void AMainHUD::BeginPlay()
 			MainWidget->AddToViewport();
 		}
 	}
+
+	if (CrosshairWidgetClass)
+	{
+		CrosshairWidget = CreateWidget<UCrosshairWidget>(GetWorld(), CrosshairWidgetClass);
+		if (CrosshairWidget)
+		{
+			CrosshairWidget->AddToViewport();
+		}
+	}
+
 }
