@@ -13,6 +13,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class ARifle;
 
 UCLASS()
 class PROJECT_API APlayerC : public ACharacter
@@ -22,7 +23,7 @@ class PROJECT_API APlayerC : public ACharacter
 public:
 	APlayerC();
 
-	bool GetAiming();
+	bool GetAiming() const;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAimingSignature OnAiming;
@@ -55,11 +56,23 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
 	UInputAction* AimAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
+	UInputAction* ShootAction;
+
 	UPROPERTY(EditDEfaultsOnly, Category = "Speed")
 	float RunSpeed;
 
 	UPROPERTY(EditDEfaultsOnly, Category = "Speed")
 	float WalkSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<ARifle> Weapon;
+
+	UPROPERTY()
+	ARifle* CurrentWeapon;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	FName SocketWeaponName = "WeaponSocket";
 
 	void Move(const FInputActionValue& InputValue);
 	void Look(const FInputActionValue& InputValue);
@@ -70,18 +83,25 @@ private:
 	void StartAiming(const FInputActionValue& InputValue);
 	void StopAiming(const FInputActionValue& InputValue);
 
+	void StartShoot(const FInputActionValue& InputValue);
+
+	void SpawnWeapon();
+
+	void Trace();
+
+	void AmmoCount();
+
 	bool bIsRunning;
 
 	bool bIsAiming;
 
-	void SpawnWeapon();
+	UPROPERTY(EditDefaultsOnly)
+	float LenghtTrace;
 
-	UPROPERTY(EditDefaultsOnly, Category="Weapon")
-	TSubclassOf<AActor> Weapon;
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	int32 Ammo = 30;
 
-	UPROPERTY()
-	AActor* CurrentWeapon;
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	int32 MaxAmmo = 60;
 
-	UPROPERTY(EditDefaultsOnly, Category="Weapon")
-	FName SocketWeaponName = "WeaponSocket";
 };

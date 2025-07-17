@@ -16,12 +16,12 @@ class PROJECT_API ARifle : public AActor
 
 public:	
 	ARifle();
+	UArrowComponent* GetArrow() const { return ArrowComponent; }
+
 protected:
-	// Компонент скелетной сетки оружия
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USkeletalMeshComponent* SkeletalMesh;
 
-	// Компонент стрелки для указания направления (например, направления выстрела)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UArrowComponent* ArrowComponent;
 };

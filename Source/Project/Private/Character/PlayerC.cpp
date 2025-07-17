@@ -7,6 +7,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Widgets/MainHUD.h"
+#include "Weapon/Rifle.h"
+#include "Components/ArrowComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 APlayerC::APlayerC()
@@ -63,6 +65,8 @@ void APlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		Input->BindAction(AimAction, ETriggerEvent::Started, this, &APlayerC::StartAiming);
 		Input->BindAction(AimAction, ETriggerEvent::Completed, this, &APlayerC::StopAiming);
 		Input->BindAction(AimAction, ETriggerEvent::Canceled, this, &APlayerC::StopAiming);
+
+		Input->BindAction(ShootAction, ETriggerEvent::Started, this, &APlayerC::StartShoot);
 	}
 }
 
@@ -114,10 +118,10 @@ void APlayerC::SpawnWeapon()
 
 	FTransform SocketTransform = GetMesh()->GetSocketTransform(SocketWeaponName);
 
-	CurrentWeapon = GetWorld()->SpawnActor<AActor>(Weapon, SocketTransform);
+	CurrentWeapon = GetWorld()->SpawnActor<ARifle>(Weapon, SocketTransform);
 	CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, SocketWeaponName);
 }
-bool APlayerC::GetAiming()
+bool APlayerC::GetAiming() const
 {
 	return bIsAiming;
 }
@@ -136,6 +140,45 @@ void APlayerC::StopAiming(const FInputActionValue& InputValue)
 	bIsAiming = false;
 	OnAiming.Broadcast(bIsAiming);
 	bUseControllerRotationYaw = false;
+}
+
+void APlayerC::StartShoot(const FInputActionValue& InputValue)
+{
+	if (bIsAiming) {
+		Trace();
+		AmmoCount();
+	}
+}
+
+void APlayerC::Trace()
+{
+	if (!GetWorld()) return;
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (!PlayerController) return;
+
+	APlayerCameraManager* CameraManager = PlayerController->PlayerCameraManager;
+	if (!CameraManager) return;
+
+	UArrowComponent* Arrow = CurrentWeapon->GetArrow();
+
+	FVector StartTrace = Arrow->GetComponentLocation();
+	FVector EndTrace = CameraManager->GetCameraLocation() + CameraManager->GetCameraRotation().Vector() * LenghtTrace;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	FHitResult OutHit;
+	GetWorld()->LineTraceSingleByChannel(OutHit, StartTrace, EndTrace, ECollisionChannel::ECC_Visibility, Params);
+	DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Red, false, 5.0f, 0, 0.5f);
+	if (OutHit.bBlockingHit)
+	{
+		DrawDebugSphere(GetWorld(), OutHit.ImpactPoint, 5.0f, 8, FColor::Red, false, 5.0f, 0);
+	}
+
+}
+
+void APlayerC::AmmoCount()
+{
+	Ammo = FMath::Clamp(Ammo - 1, 0, MaxAmmo);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Ammo is %d"), Ammo));
 }
 
 

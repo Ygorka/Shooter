@@ -5,16 +5,18 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
 
-// Sets default values
 ARifle::ARifle()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
 
+    // 1. Сначала создаем и назначаем корневой компонент
+    RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
+    // 2. Затем создаем и прикрепляем скелетный меш
     SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
-    SkeletalMesh->SetupAttachment(RootComponent);
+    SkeletalMesh->SetupAttachment(RootComponent); // Явно указываем корневой компонент
 
-    // Создаем и настраиваем компонент стрелки
+    // 3. Создаем и прикрепляем компонент стрелки
     ArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("MuzzleDirection"));
     ArrowComponent->SetupAttachment(RootComponent);
 }
