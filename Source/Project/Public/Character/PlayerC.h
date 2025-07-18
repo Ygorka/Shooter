@@ -14,6 +14,7 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 class ARifle;
+class USoundBase;
 
 UCLASS()
 class PROJECT_API APlayerC : public ACharacter
@@ -38,6 +39,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
 
 private:
 
@@ -84,12 +86,15 @@ private:
 	void StopAiming(const FInputActionValue& InputValue);
 
 	void StartShoot(const FInputActionValue& InputValue);
+	void StopShoot(const FInputActionValue& InputValue);
 
 	void SpawnWeapon();
 
 	void Trace();
 
 	void AmmoCount();
+
+	void Shoot();
 
 	bool bIsRunning;
 
@@ -104,4 +109,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	int32 MaxAmmo = 60;
 
+	FTimerHandle ShootTimer;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* ShootSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* EmptyAmmoSound;
 };

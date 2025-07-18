@@ -9,6 +9,7 @@
 #include "Widgets/MainHUD.h"
 #include "Weapon/Rifle.h"
 #include "Components/ArrowComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 APlayerC::APlayerC()
@@ -28,6 +29,7 @@ APlayerC::APlayerC()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
 
 }
 
@@ -67,6 +69,7 @@ void APlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		Input->BindAction(AimAction, ETriggerEvent::Canceled, this, &APlayerC::StopAiming);
 
 		Input->BindAction(ShootAction, ETriggerEvent::Started, this, &APlayerC::StartShoot);
+		Input->BindAction(ShootAction, ETriggerEvent::Completed, this, &APlayerC::StopShoot);
 	}
 }
 
@@ -145,14 +148,40 @@ void APlayerC::StopAiming(const FInputActionValue& InputValue)
 void APlayerC::StartShoot(const FInputActionValue& InputValue)
 {
 	if (bIsAiming) {
+		GetWorld()->GetTimerManager().SetTimer(ShootTimer, this, &APlayerC::Shoot, 0.2f, true, 0.0f);
+	}
+}
+
+void APlayerC::StopShoot(const FInputActionValue& InputValue)
+{
+	GetWorld()->GetTimerManager().ClearTimer(ShootTimer);
+}
+
+void APlayerC::Shoot()
+{
+	if (Ammo > 0 && bIsAiming)
+	{
+		if (ShootSound)
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), ShootSound);
+		}
+		CurrentWeapon->LightShoot();
 		Trace();
 		AmmoCount();
+	}
+	else
+	{
+		if (EmptyAmmoSound)
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), EmptyAmmoSound);
+		}
+		GetWorld()->GetTimerManager().ClearTimer(ShootTimer);
 	}
 }
 
 void APlayerC::Trace()
 {
-	if (!GetWorld()) return;
+	if (!GetWorld() || !CurrentWeapon || !CurrentWeapon->GetArrow()) return;
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (!PlayerController) return;
 
@@ -180,10 +209,3 @@ void APlayerC::AmmoCount()
 	Ammo = FMath::Clamp(Ammo - 1, 0, MaxAmmo);
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Ammo is %d"), Ammo));
 }
-
-
-
-
-
-
-

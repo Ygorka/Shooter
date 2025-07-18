@@ -8,6 +8,7 @@
 
 class USkeletalMeshComponent;
 class UArrowComponent;
+class UPointLightComponent;
 
 UCLASS()
 class PROJECT_API ARifle : public AActor
@@ -16,7 +17,10 @@ class PROJECT_API ARifle : public AActor
 
 public:	
 	ARifle();
+
 	UArrowComponent* GetArrow() const { return ArrowComponent; }
+
+	void LightShoot();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -24,4 +28,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UArrowComponent* ArrowComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPointLightComponent* PointLight;
+
+	FTimerHandle PointTimer;
 };
