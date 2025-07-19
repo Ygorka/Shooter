@@ -29,8 +29,6 @@ APlayerC::APlayerC()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-
-
 }
 
 void APlayerC::BeginPlay()
@@ -133,6 +131,7 @@ void APlayerC::StartAiming(const FInputActionValue& InputValue)
 {
 	if (bIsAiming) return;
 	bIsAiming = true;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 	OnAiming.Broadcast(bIsAiming);
 	bUseControllerRotationYaw =  true;
 }
@@ -141,6 +140,7 @@ void APlayerC::StopAiming(const FInputActionValue& InputValue)
 {
 	if (!bIsAiming) return;
 	bIsAiming = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 	OnAiming.Broadcast(bIsAiming);
 	bUseControllerRotationYaw = false;
 }
@@ -159,18 +159,25 @@ void APlayerC::StopShoot(const FInputActionValue& InputValue)
 
 void APlayerC::Shoot()
 {
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (!AnimInstance) return;
+
 	if (Ammo > 0 && bIsAiming)
 	{
+		Shake(CameraShake);
 		if (ShootSound)
 		{
 			UGameplayStatics::PlaySound2D(GetWorld(), ShootSound);
 		}
+		AnimInstance->Montage_Play(ShootAnimation, 1.0f, EMontagePlayReturnType::Duration, 0.0f, false);
 		CurrentWeapon->LightShoot();
 		Trace();
 		AmmoCount();
 	}
 	else
 	{
+		AnimInstance->Montage_Stop(0.1f, ShootAnimation);
+
 		if (EmptyAmmoSound)
 		{
 			UGameplayStatics::PlaySound2D(GetWorld(), EmptyAmmoSound);
@@ -208,4 +215,15 @@ void APlayerC::AmmoCount()
 {
 	Ammo = FMath::Clamp(Ammo - 1, 0, MaxAmmo);
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Ammo is %d"), Ammo));
+}
+
+void APlayerC::Shake(TSubclassOf<UCameraShakeBase> Camera)
+{
+	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+	{
+		if (APlayerCameraManager* CameraManager = PlayerController->PlayerCameraManager)
+		{
+			CameraManager->StartCameraShake(Camera);
+		}
+	}
 }

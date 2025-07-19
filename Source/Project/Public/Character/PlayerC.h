@@ -15,6 +15,8 @@ class UInputMappingContext;
 class UInputAction;
 class ARifle;
 class USoundBase;
+class UAnimMontage;
+class UCameraShakeBase;
 
 UCLASS()
 class PROJECT_API APlayerC : public ACharacter
@@ -70,11 +72,34 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	TSubclassOf<ARifle> Weapon;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+	TSubclassOf<UCameraShakeBase> CameraShake;
+
 	UPROPERTY()
 	ARifle* CurrentWeapon;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	FName SocketWeaponName = "WeaponSocket";
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* ShootAnimation;
+
+	UPROPERTY(EditDefaultsOnly)
+	float LenghtTrace;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	int32 Ammo = 30;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	int32 MaxAmmo = 60;
+
+	FTimerHandle ShootTimer;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* ShootSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* EmptyAmmoSound;
 
 	void Move(const FInputActionValue& InputValue);
 	void Look(const FInputActionValue& InputValue);
@@ -96,24 +121,9 @@ private:
 
 	void Shoot();
 
+	void Shake(TSubclassOf<UCameraShakeBase> Camera);
+
 	bool bIsRunning;
 
 	bool bIsAiming;
-
-	UPROPERTY(EditDefaultsOnly)
-	float LenghtTrace;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	int32 Ammo = 30;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	int32 MaxAmmo = 60;
-
-	FTimerHandle ShootTimer;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Sound")
-	USoundBase* ShootSound;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Sound")
-	USoundBase* EmptyAmmoSound;
 };

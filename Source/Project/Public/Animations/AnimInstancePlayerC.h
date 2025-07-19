@@ -17,18 +17,18 @@ public:
 
 	virtual void NativeUpdateAnimation(float DeltaTime) override;
 
-
 protected:
-
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float Speed;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float Direction;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool bIsAiming;
 
 	UPROPERTY(BlueprintReadOnly)
 	float AimOffset;
-
 private:
 	UPROPERTY(EditDefaultsOnly)
 	APlayerC* Character;
