@@ -29,6 +29,7 @@ APlayerC::APlayerC()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
 }
 
 void APlayerC::BeginPlay()
@@ -45,6 +46,8 @@ void APlayerC::BeginPlay()
 	}
 
 	SpawnWeapon();
+
+	OnChangeAmmo.Broadcast(Ammo);
 
 }
 
@@ -215,6 +218,7 @@ void APlayerC::AmmoCount()
 {
 	Ammo = FMath::Clamp(Ammo - 1, 0, MaxAmmo);
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Ammo is %d"), Ammo));
+	OnChangeAmmo.Broadcast(Ammo);
 }
 
 void APlayerC::Shake(TSubclassOf<UCameraShakeBase> Camera)

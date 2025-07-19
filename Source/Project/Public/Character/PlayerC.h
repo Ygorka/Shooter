@@ -8,6 +8,7 @@
 #include "PlayerC.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAimingSignature, bool, NewIsAiming);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChangeAmmoSignature, int32, NewAmmo);
 
 class USpringArmComponent;
 class UCameraComponent;
@@ -30,6 +31,13 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAimingSignature OnAiming;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnChangeAmmoSignature OnChangeAmmo;
+
+	int32 GetAmmo() { return Ammo; }
+	int32 SetAmmo(int32 NewAmmo) { Ammo = NewAmmo; return Ammo; }
+	int32 GetMaxAmmo() { return MaxAmmo; }
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
