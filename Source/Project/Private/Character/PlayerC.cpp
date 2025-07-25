@@ -9,6 +9,7 @@
 #include "Widgets/MainHUD.h"
 #include "Weapon/Rifle.h"
 #include "Components/ArrowComponent.h"
+#include "Components/HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -30,6 +31,7 @@ APlayerC::APlayerC()
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
 
 void APlayerC::BeginPlay()
@@ -231,3 +233,15 @@ void APlayerC::Shake(TSubclassOf<UCameraShakeBase> Camera)
 		}
 	}
 }
+
+void APlayerC::GetCurrentAndMaxHealth_Implementation(float& CurrentHealth, float& MaxHealth)
+{
+	CurrentHealth = HealthComponent->GetCurrentHealth();
+	MaxHealth = HealthComponent->GetMaxHealth();
+}
+
+void APlayerC::OnTakeHeal_Implementation(float Amount)
+{
+	HealthComponent->AddHealth(Amount);
+}
+

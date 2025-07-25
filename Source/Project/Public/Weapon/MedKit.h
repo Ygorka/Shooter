@@ -4,22 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "WeaponClip.generated.h"
+#include "Interfaces/IOnTakeHealth.h"
+#include "MedKit.generated.h"
 
 class UStaticMeshComponent;
-class USpotLightComponent;
 class UBoxComponent;
-class APlayerC;
 class USoundBase;
 
 UCLASS()
-class PROJECT_API AWeaponClip : public AActor
+class PROJECT_API AMedKit : public AActor, public IIOnTakeHealth
 {
 	GENERATED_BODY()
-
 	
 public:	
-	AWeaponClip();
+	AMedKit();
 
 protected:
 	virtual void BeginPlay() override;
@@ -28,20 +26,14 @@ protected:
 	UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(EditDefaultsOnly)
-	USpotLightComponent* SpotLight;
-
-	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* Box;
-
-	UPROPERTY(EditDefaultsOnly)
-	USoundBase* AmmoTakeSound;
-private:
-
-	UPROPERTY()
-	APlayerC* Character;
 
 	UFUNCTION()
 	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	void AddAmmo();
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* FirstAidKitSound;
+private:
+	UPROPERTY(EditDefaultsOnly)
+	float Heal = 25.f;
 };

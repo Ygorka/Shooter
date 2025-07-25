@@ -27,7 +27,9 @@ public class Project : ModuleRules
 			"Project/Public/GameModes",
 			"Project/Public/Animations",
             "Project/Public/Weapon",
-			"Project/Public/Widgets"
+			"Project/Public/Widgets",
+			"Project/Public/Interfaces",
+            "Project/Public/Components"
 
         });
 

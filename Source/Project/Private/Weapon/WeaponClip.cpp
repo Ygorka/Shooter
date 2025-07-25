@@ -5,6 +5,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SpotLightComponent.h"
+#include "Sound/SoundBase.h"
+#include "Kismet/GameplayStatics.h"
 #include "Character/PlayerC.h"
 
 AWeaponClip::AWeaponClip()
@@ -40,18 +42,21 @@ void AWeaponClip::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 {
 	if (Character == Cast<APlayerC>(OtherActor))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, FString(TEXT("Cast")));
 		AddAmmo();
-		Destroy();
 	}
 }
 
 void AWeaponClip::AddAmmo()
 {
-	if (Character->GetAmmo() != Character->GetMaxAmmo())
+	if (Character->GetAmmo() < Character->GetMaxAmmo())
 	{
 		Character->SetAmmo(FMath::Clamp(Character->GetAmmo() + Character->GetMaxAmmo(), 0, Character->GetMaxAmmo()));
 		Character->OnChangeAmmo.Broadcast(Character->GetAmmo());
+		if (AmmoTakeSound)
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), AmmoTakeSound, 1.0f);
+		}
+		Destroy();
 	}
 }
 

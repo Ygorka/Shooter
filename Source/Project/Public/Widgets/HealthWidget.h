@@ -8,6 +8,8 @@
 
 class UProgressBar;
 class  UImage;
+
+
 UCLASS()
 class PROJECT_API UHealthWidget : public UUserWidget
 {
@@ -19,4 +21,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UImage* HealthImage;
+
+	virtual void NativeConstruct() override;
+
+	UFUNCTION()
+	void ChangePercent(float CurrentHealth, float MaxHealth);
 };

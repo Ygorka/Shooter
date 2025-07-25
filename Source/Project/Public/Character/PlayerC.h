@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interfaces/IOnTakeHealth.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "PlayerC.generated.h"
@@ -18,9 +19,10 @@ class ARifle;
 class USoundBase;
 class UAnimMontage;
 class UCameraShakeBase;
+class UHealthComponent;
 
 UCLASS()
-class PROJECT_API APlayerC : public ACharacter
+class PROJECT_API APlayerC : public ACharacter, public IIOnTakeHealth
 {
 	GENERATED_BODY()
 
@@ -39,6 +41,10 @@ public:
 	int32 SetAmmo(int32 NewAmmo) { Ammo = NewAmmo; return Ammo; }
 	int32 GetMaxAmmo() { return MaxAmmo; }
 
+	UFUNCTION(BlueprintCallable)
+	UHealthComponent* GetHealthComponent() { return HealthComponent; }
+
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	USpringArmComponent* SpringArm;
@@ -50,9 +56,10 @@ protected:
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+	virtual void OnTakeHeal_Implementation(float Amount) override;
 
+	virtual void GetCurrentAndMaxHealth_Implementation(float& CurrentHealth, float& MaxHealth) override;
 private:
-
 	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
 	UInputMappingContext* InputMapping;
 
@@ -108,6 +115,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 	USoundBase* EmptyAmmoSound;
+
+	UPROPERTY(EditDefaultsOnly)
+	UHealthComponent* HealthComponent;
 
 	void Move(const FInputActionValue& InputValue);
 	void Look(const FInputActionValue& InputValue);
