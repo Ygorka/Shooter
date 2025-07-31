@@ -15,7 +15,7 @@ void UAnimInstancePlayerC::NativeUpdateAnimation(float DeltaTime) {
 	Super::NativeUpdateAnimation(DeltaTime);
 
 	if (!IsValid(Character)) return;
-	Speed = TryGetPawnOwner()->GetVelocity().Size2D();
+	Speed = Character->GetVelocity().Size2D();
 	bIsAiming = Character->GetAiming();
 	FVector Velocity = Character->GetVelocity();
 	FRotator Rotation = Character->GetActorRotation();

@@ -8,15 +8,17 @@ public class Project : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { 
+		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core",
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-            "EnhancedInput",
-            "UMG",
+			"EnhancedInput",
+			"UMG",
 			"Slate",
-			"SlateCore"
+			"SlateCore",
+			"NavigationSystem",
+            "AIModule"
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
@@ -29,7 +31,8 @@ public class Project : ModuleRules
             "Project/Public/Weapon",
 			"Project/Public/Widgets",
 			"Project/Public/Interfaces",
-            "Project/Public/Components"
+            "Project/Public/Components",
+            "Project/Public/AI"
 
         });
 
