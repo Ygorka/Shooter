@@ -32,7 +32,8 @@ public class Project : ModuleRules
 			"Project/Public/Widgets",
 			"Project/Public/Interfaces",
             "Project/Public/Components",
-            "Project/Public/AI"
+            "Project/Public/AI",
+            "Project/Public/Spawners"
 
         });
 
