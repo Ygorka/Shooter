@@ -17,15 +17,19 @@ class PROJECT_API UHealthComponent : public UActorComponent
 public:	
 	UHealthComponent();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetCurrentHealth();
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetMaxHealth();
 
 	UFUNCTION(BlueprintCallable)
 	void AddHealth(float Amount);
+
 	UFUNCTION(BlueprintCallable)
 	void ReduceDamage(float Amount);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	float GetHealthPercent();
 
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChange OnHealthChange;

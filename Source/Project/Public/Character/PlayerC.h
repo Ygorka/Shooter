@@ -20,6 +20,7 @@ class USoundBase;
 class UAnimMontage;
 class UCameraShakeBase;
 class UHealthComponent;
+class USoundAttenuation;
 
 UCLASS()
 class PROJECT_API APlayerC : public ACharacter, public IIOnTakeHealth
@@ -118,6 +119,27 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	UHealthComponent* HealthComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundAttenuation* SA_Hit;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* MaterialHitSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* ZombieHitSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	FName TagActor = "Enemy";
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float VolumeMaterialHit = 0.4f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float VolumeZombieHit = 1.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float VolumeShoot = 0.6f;
 
 	void Move(const FInputActionValue& InputValue);
 	void Look(const FInputActionValue& InputValue);

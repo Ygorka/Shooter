@@ -172,7 +172,7 @@ void APlayerC::Shoot()
 		Shake(CameraShake);
 		if (ShootSound)
 		{
-			UGameplayStatics::PlaySound2D(GetWorld(), ShootSound);
+			UGameplayStatics::PlaySound2D(GetWorld(), ShootSound, VolumeShoot);
 		}
 		AnimInstance->Montage_Play(ShootAnimation, 1.0f, EMontagePlayReturnType::Duration, 0.0f, false);
 		CurrentWeapon->LightShoot();
@@ -212,6 +212,20 @@ void APlayerC::Trace()
 	if (OutHit.bBlockingHit)
 	{
 		DrawDebugSphere(GetWorld(), OutHit.ImpactPoint, 5.0f, 8, FColor::Red, false, 5.0f, 0);
+
+		float RandomPich = FMath::RandRange(0.7f, 1.3f);
+
+		if (OutHit.GetActor()->ActorHasTag(TagActor))
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ZombieHitSound, OutHit.ImpactPoint, VolumeZombieHit, RandomPich, 0.0f, SA_Hit);
+			float RandomDamage = FMath::RandRange(10.f, 40.f);
+			UGameplayStatics::ApplyDamage(OutHit.GetActor(), RandomDamage, GetController(), this, nullptr);
+		}
+		else
+		{
+			
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), MaterialHitSound, OutHit.ImpactPoint, VolumeZombieHit, RandomPich, 0.0f, SA_Hit);
+		}
 	}
 
 }

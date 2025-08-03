@@ -59,7 +59,7 @@ void AZombieAIC::MoveToCharacter()
 	FPathFollowingRequestResult MoveResutl = MoveTo(MoveRequest);
 	CurrentMoveRequestID = MoveResutl.MoveId;
 
-	GetWorld()->GetTimerManager().SetTimer(ChaseTimer, this, &ThisClass::MoveToCharacter, 0.1f, true);
+	GetWorld()->GetTimerManager().SetTimer(ChaseTimer, this, &ThisClass::MoveToCharacter, 0.01f, true);
 }
 
 void AZombieAIC::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
@@ -96,4 +96,16 @@ void AZombieAIC::OnAttackEnded(UAnimMontage* Montage, bool bInterrupted)
 	{
 		Attack();
 	}
+}
+
+void AZombieAIC::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (!GetWorld()) return;
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+
+	Mesh->GetAnimInstance()->OnMontageEnded.RemoveDynamic(this, &ThisClass::OnAttackEnded);
+
+	GetPathFollowingComponent()->OnRequestFinished.RemoveAll(this);
 }
