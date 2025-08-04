@@ -23,14 +23,16 @@ protected:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UZombieHealthWidget* ZombieHealthWidget;
+private:
+
 	UPROPERTY()
 	UHealthComponent* HealthComponent;
 
 	UPROPERTY(EditDefaultsOnly)
 	float DestroyActorTime = 5.f;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
-	UZombieHealthWidget* ZombieHealthWidget;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	UWidgetComponent* WidgetComponent;

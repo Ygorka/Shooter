@@ -36,6 +36,7 @@ float AZombie::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageE
 
 	if (HealthComponent->GetCurrentHealth() <= 0.f)
 	{
+		ZombieHealthWidget->SetVisibility(ESlateVisibility::Hidden);
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		GetMesh()->SetSimulatePhysics(true);

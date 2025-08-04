@@ -50,6 +50,7 @@ void APlayerC::BeginPlay()
 	SpawnWeapon();
 
 	OnChangeAmmo.Broadcast(Ammo);
+	OnChangeGrenade.Broadcast(GrenadeCount);
 
 }
 
@@ -73,6 +74,8 @@ void APlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		Input->BindAction(ShootAction, ETriggerEvent::Started, this, &APlayerC::StartShoot);
 		Input->BindAction(ShootAction, ETriggerEvent::Completed, this, &APlayerC::StopShoot);
+
+		Input->BindAction(ThrowAction, ETriggerEvent::Started, this, &APlayerC::ThrowGrenade);
 	}
 }
 
@@ -202,24 +205,28 @@ void APlayerC::Trace()
 
 	UArrowComponent* Arrow = CurrentWeapon->GetArrow();
 
-	FVector StartTrace = Arrow->GetComponentLocation();
+	FVector StartTrace = CameraManager->GetCameraLocation();
 	FVector EndTrace = CameraManager->GetCameraLocation() + CameraManager->GetCameraRotation().Vector() * LenghtTrace;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 	FHitResult OutHit;
 	GetWorld()->LineTraceSingleByChannel(OutHit, StartTrace, EndTrace, ECollisionChannel::ECC_Visibility, Params);
-	DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Red, false, 5.0f, 0, 0.5f);
 	if (OutHit.bBlockingHit)
 	{
-		DrawDebugSphere(GetWorld(), OutHit.ImpactPoint, 5.0f, 8, FColor::Red, false, 5.0f, 0);
-
 		float RandomPich = FMath::RandRange(0.7f, 1.3f);
 
 		if (OutHit.GetActor()->ActorHasTag(TagActor))
 		{
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ZombieHitSound, OutHit.ImpactPoint, VolumeZombieHit, RandomPich, 0.0f, SA_Hit);
+			
+			if (OutHit.BoneName == "Spine2")
+			{
+				UGameplayStatics::ApplyPointDamage(OutHit.GetActor(), 100.f, FVector::ZeroVector, OutHit, GetController(), this, nullptr);
+			}
+			else {
 			float RandomDamage = FMath::RandRange(10.f, 40.f);
 			UGameplayStatics::ApplyDamage(OutHit.GetActor(), RandomDamage, GetController(), this, nullptr);
+			}
 		}
 		else
 		{
@@ -257,5 +264,21 @@ void APlayerC::GetCurrentAndMaxHealth_Implementation(float& CurrentHealth, float
 void APlayerC::OnTakeHeal_Implementation(float Amount)
 {
 	HealthComponent->AddHealth(Amount);
+}
+
+void APlayerC::ThrowGrenade(const FInputActionValue& InputValue)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("ThrowGrenede"));
+	if (bIsAiming && GrenadeCount > 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("InThrowGrenede"));
+
+		--GrenadeCount;
+		OnChangeGrenade.Broadcast(GrenadeCount);
+
+		FTransform ArrowTransform = CurrentWeapon->GetArrow()->GetSocketTransform("None");
+		if (!GetWorld() && GrenadeBP) return;
+		GetWorld()->SpawnActor<AActor>(GrenadeBP, ArrowTransform);
+	}
 }
 

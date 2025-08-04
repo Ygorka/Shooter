@@ -10,6 +10,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAimingSignature, bool, NewIsAiming);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChangeAmmoSignature, int32, NewAmmo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChangeGrenadeSignature, int32, NewGrenade);
 
 class USpringArmComponent;
 class UCameraComponent;
@@ -38,8 +39,11 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnChangeAmmoSignature OnChangeAmmo;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnChangeGrenadeSignature OnChangeGrenade;
+
 	int32 GetAmmo() { return Ammo; }
-	int32 SetAmmo(int32 NewAmmo) { Ammo = NewAmmo; return Ammo; }
+	void SetAmmo(int32 NewAmmo) { Ammo = NewAmmo;}
 	int32 GetMaxAmmo() { return MaxAmmo; }
 
 	UFUNCTION(BlueprintCallable)
@@ -78,6 +82,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
 	UInputAction* ShootAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
+	UInputAction* ThrowAction;
 
 	UPROPERTY(EditDEfaultsOnly, Category = "Speed")
 	float RunSpeed;
@@ -141,6 +148,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 	float VolumeShoot = 0.6f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Grenade")
+	int32 GrenadeCount = 3;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Grenade")
+	TSubclassOf<AActor> GrenadeBP;
+
 	void Move(const FInputActionValue& InputValue);
 	void Look(const FInputActionValue& InputValue);
 
@@ -152,6 +165,8 @@ private:
 
 	void StartShoot(const FInputActionValue& InputValue);
 	void StopShoot(const FInputActionValue& InputValue);
+
+	void ThrowGrenade(const FInputActionValue& InputValue);
 
 	void SpawnWeapon();
 
