@@ -64,6 +64,8 @@ protected:
 	virtual void OnTakeHeal_Implementation(float Amount) override;
 
 	virtual void GetCurrentAndMaxHealth_Implementation(float& CurrentHealth, float& MaxHealth) override;
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "EnhancedInput")
 	UInputMappingContext* InputMapping;

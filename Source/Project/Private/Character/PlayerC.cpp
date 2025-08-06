@@ -10,6 +10,7 @@
 #include "Weapon/Rifle.h"
 #include "Components/ArrowComponent.h"
 #include "Components/HealthComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -280,5 +281,21 @@ void APlayerC::ThrowGrenade(const FInputActionValue& InputValue)
 		if (!GetWorld() && GrenadeBP) return;
 		GetWorld()->SpawnActor<AActor>(GrenadeBP, ArrowTransform);
 	}
+}
+
+float APlayerC::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	HealthComponent->ReduceDamage(ActualDamage);
+
+	if (HealthComponent->GetCurrentHealth() <= 0.f)
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GetMesh()->SetSimulatePhysics(true);
+	}
+
+	return ActualDamage;
 }
 

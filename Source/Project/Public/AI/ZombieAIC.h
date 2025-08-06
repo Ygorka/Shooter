@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Interfaces/IOnZombieAttack.h"
 #include "ZombieAIC.generated.h"
 
 class ACharacter;
@@ -12,11 +13,12 @@ class UAnimMontage;
 class USkeletalMeshComponent;
 
 UCLASS()
-class PROJECT_API AZombieAIC : public AAIController
+class PROJECT_API AZombieAIC : public AAIController, public IIOnZombieAttack
 {
 	GENERATED_BODY()
 public:
 	AZombieAIC();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -50,5 +52,8 @@ private:
 	UAnimMontage* AttackAnimation;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	UFUNCTION()
+	void OnNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
 
 };

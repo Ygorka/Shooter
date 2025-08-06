@@ -32,6 +32,7 @@ void AZombieAIC::BeginPlay()
 	if (Mesh)
 	{
 		Mesh->GetAnimInstance()->OnMontageEnded.AddDynamic(this, &ThisClass::OnAttackEnded);
+		Mesh->GetAnimInstance()->OnPlayMontageNotifyBegin.AddDynamic(this, &ThisClass::OnNotifyBegin);
 	}
 	else
 	{
@@ -108,4 +109,18 @@ void AZombieAIC::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Mesh->GetAnimInstance()->OnMontageEnded.RemoveDynamic(this, &ThisClass::OnAttackEnded);
 
 	GetPathFollowingComponent()->OnRequestFinished.RemoveAll(this);
+}
+
+void AZombieAIC::OnNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
+{
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Notify: %s"), *NotifyName.ToString()));
+
+	if (NotifyName == "HitStart")
+	{
+		IIOnZombieAttack::Execute_IStartAttack(GetPawn());
+	}
+	else {
+		IIOnZombieAttack::Execute_IStopAttack(GetPawn());
+	}
 }
