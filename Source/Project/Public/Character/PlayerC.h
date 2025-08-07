@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Interfaces/IOnTakeHealth.h"
+#include "Interfaces/IDeath.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "PlayerC.generated.h"
@@ -22,9 +23,10 @@ class UAnimMontage;
 class UCameraShakeBase;
 class UHealthComponent;
 class USoundAttenuation;
+class APlayerController;
 
 UCLASS()
-class PROJECT_API APlayerC : public ACharacter, public IIOnTakeHealth
+class PROJECT_API APlayerC : public ACharacter, public IIOnTakeHealth, public IIDeath
 {
 	GENERATED_BODY()
 
@@ -155,6 +157,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Grenade")
 	TSubclassOf<AActor> GrenadeBP;
+
+	UPROPERTY()
+	APlayerController* PlayerController;
 
 	void Move(const FInputActionValue& InputValue);
 	void Look(const FInputActionValue& InputValue);

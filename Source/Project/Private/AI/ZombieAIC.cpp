@@ -114,8 +114,6 @@ void AZombieAIC::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AZombieAIC::OnNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
 {
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Notify: %s"), *NotifyName.ToString()));
-
 	if (NotifyName == "HitStart")
 	{
 		IIOnZombieAttack::Execute_IStartAttack(GetPawn());

@@ -67,8 +67,6 @@ void AZombie::Death()
 
 void AZombie::IStartAttack_Implementation()
 {
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("IStartAttack_Implementation"));
 	if (!GetWorld() && !SphereComponent) return;
 
 	SphereComponent->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
@@ -86,7 +84,6 @@ void AZombie::IStartAttack_Implementation()
 	{
 		for (AActor* Actor : OverlapedActor)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("InHit"));
 			UGameplayStatics::ApplyDamage(Actor, Damage, GetInstigatorController(), this, nullptr);
 		}
 	}
@@ -96,7 +93,6 @@ void AZombie::IStartAttack_Implementation()
 void AZombie::IStopAttack_Implementation()
 {
 	if (!GetWorld()) return;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("IStopAttack_Implementation"));
 	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 

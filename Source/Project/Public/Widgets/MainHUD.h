@@ -4,13 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "Interfaces/IDeath.h"
 #include "MainHUD.generated.h"
 
 class UMainWidget;
 class UCrosshairWidget;
+class UDiedWidget;
 
 UCLASS()
-class PROJECT_API AMainHUD : public AHUD
+class PROJECT_API AMainHUD : public AHUD, public IIDeath
 {
 	GENERATED_BODY()
 
@@ -29,4 +31,12 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UCrosshairWidget> CrosshairWidgetClass;
+
+	UPROPERTY()
+	UDiedWidget* DiedWidget;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDiedWidget> DiedWidgetClass;
+
+	virtual void Death_Implementation() override;
 };

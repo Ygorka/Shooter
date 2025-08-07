@@ -19,6 +19,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
+
 	UPROPERTY()
 	UBoxComponent* Box;
 
@@ -33,4 +35,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	float HeightObject = 50.f;
+
+	UPROPERTY()
+	FTimerHandle SpawnTimer;
 };

@@ -22,8 +22,6 @@ void AMainSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FTimerHandle SpawnTimer;
-
 	if (!Box && !Class && GetWorld()) return;
 	FVector BoxCenter = Box->GetComponentLocation();
 	FVector BoxScaled = Box->GetScaledBoxExtent();
@@ -61,6 +59,15 @@ AActor* AMainSpawner::Spawner(FVector Center, FVector Scaled)
 	AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(Class, RandomPoint,FRotator::ZeroRotator, SpawnParams);
 
 	return SpawnedActor;
+}
+
+void AMainSpawner::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (!GetWorld()) return;
+
+	GetWorld()->GetTimerManager().ClearTimer(SpawnTimer);
 }
 
 

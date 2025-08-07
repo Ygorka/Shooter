@@ -39,7 +39,7 @@ void APlayerC::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	 PlayerController = Cast<APlayerController>(Controller);
 	if (PlayerController) 
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer())) 
@@ -198,7 +198,7 @@ void APlayerC::Shoot()
 void APlayerC::Trace()
 {
 	if (!GetWorld() || !CurrentWeapon || !CurrentWeapon->GetArrow()) return;
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	PlayerController = GetWorld()->GetFirstPlayerController();
 	if (!PlayerController) return;
 
 	APlayerCameraManager* CameraManager = PlayerController->PlayerCameraManager;
@@ -241,13 +241,12 @@ void APlayerC::Trace()
 void APlayerC::AmmoCount()
 {
 	Ammo = FMath::Clamp(Ammo - 1, 0, MaxAmmo);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Ammo is %d"), Ammo));
 	OnChangeAmmo.Broadcast(Ammo);
 }
 
 void APlayerC::Shake(TSubclassOf<UCameraShakeBase> Camera)
 {
-	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+	if (PlayerController)
 	{
 		if (APlayerCameraManager* CameraManager = PlayerController->PlayerCameraManager)
 		{
@@ -269,11 +268,8 @@ void APlayerC::OnTakeHeal_Implementation(float Amount)
 
 void APlayerC::ThrowGrenade(const FInputActionValue& InputValue)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("ThrowGrenede"));
 	if (bIsAiming && GrenadeCount > 0)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("InThrowGrenede"));
-
 		--GrenadeCount;
 		OnChangeGrenade.Broadcast(GrenadeCount);
 
@@ -291,6 +287,7 @@ float APlayerC::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 
 	if (HealthComponent->GetCurrentHealth() <= 0.f)
 	{
+		IIDeath::Execute_Death(PlayerController->GetHUD());
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		GetMesh()->SetSimulatePhysics(true);

@@ -4,6 +4,8 @@
 #include "Widgets/MainHUD.h"
 #include "Widgets/MainWidget.h"
 #include "Widgets/CrosshairWidget.h"
+#include "Widgets/DiedWidget.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 
 void AMainHUD::BeginPlay()
 {
@@ -27,4 +29,17 @@ void AMainHUD::BeginPlay()
 		}
 	}
 
+}
+
+void AMainHUD::Death_Implementation()
+{
+	if (GetWorld() && DiedWidgetClass)
+	{
+	UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
+	DiedWidget = CreateWidget<UDiedWidget>(GetWorld(), DiedWidgetClass);
+	if (DiedWidget)
+	{
+		DiedWidget->AddToViewport();
+	}
+	}
 }
